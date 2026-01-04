@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Admin Portal</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --primary-hover: #1c357a;
+            --danger-color: #ff0000;
+            --danger-hover: #ff0000;
+            --success-color: #d900ff;
+            --success-hover: #16a34a;
+            --light-gray: #f3f4f6;
+            --medium-gray: #e5e7eb;
+            --dark-gray: #4b5563;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-gray);
+            margin: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .header h2 {
+            color: var(--primary-color);
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .header button {
+            background-color: var(--danger-color);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+        .header button:hover {
+            background-color: var(--danger-hover);
+        }
+        .main-content {
+            display: flex;
+            gap: 20px;
+        }
+        #sidebar {
+            width: 300px;
+            flex-shrink: 0;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            display: none; /* Hidden until initialized */
+        }
+        .tab-controls {
+            display: flex;
+            border-bottom: 1px solid var(--medium-gray);
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            padding: 10px 15px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1em;
+            color: var(--dark-gray);
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            font-weight: 600;
+        }
+        .pane { display: none; }
+        .pane.active { display: block; }
+        #documentList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .doc-list-item {
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+        .doc-list-item:hover {
+            background-color: var(--light-gray);
+        }
+        .doc-list-item.active {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
+        }
+        #newDocBtn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        #newDocBtn:hover {
+            background-color: var(--success-hover);
+        }
+        #editorPaneWrapper {
+            flex-grow: 1;
+        }
+        #placeholder {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 500px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            color: var(--dark-gray);
+            text-align: center;
+        }
+        #editorPane {
+            display: none;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        #editorPane.visible { display: block; }
+        #docTitle {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.2em;
+            font-weight: 600;
+            border: 1px solid var(--medium-gray);
+            border-radius: 6px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        #docContent {
+            width: 100%;
+            height: 400px;
+            padding: 12px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1em;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        .editor-actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .action-btn {
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: white;
+        }
+        .save-btn { background-color: var(--primary-color); }
+        .save-btn:hover { background-color: var(--primary-hover); }
+        .delete-btn { background-color: var(--danger-color); }
+        .delete-btn:hover { background-color: var(--danger-hover); }
+        .upload-btn {
+            background-color: #5a67d8;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            font-weight: 500;
+        }
+        .upload-btn:hover { background-color: #434190; }
+        .settings-group {
+            margin-bottom: 20px;
+        }
+        .settings-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .settings-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .modal-message {
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .modal-btn-confirm { background-color: var(--primary-color); color: white; }
+        .modal-btn-cancel { background-color: var(--medium-gray); color: var(--dark-gray); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2 id="collegeNameDisplay">Loading...</h2>
+            <!-- Logout button is dynamically added by JS -->
+        </div>
+
+        <div class="main-content">
+            <!-- Sidebar -->
+            <aside id="sidebar" style="display: none;">
+                <div class="tab-controls">
+                    <button class="tab-btn active" data-tab="documents">Documents</button>
+                    <button class="tab-btn" data-tab="settings">Settings</button>
+                </div>
+                <div id="documentsPane" class="pane active">
+                    <h3>Knowledge Documents</h3>
+                    <ul id="documentList"></ul>
+                    <button id="newDocBtn">New Document</button>
+                </div>
+                <div id="settingsPane" class="pane">
+                    <h3>College Settings</h3>
+                    <div class="settings-group">
+                        <label for="websiteUrlInput">Official Website URL</label>
+                        <input type="url" id="websiteUrlInput" placeholder="https://www.example.edu">
+                    </div>
+                    <div class="settings-group">
+                        <label for="contactNameInput">Fallback Staff Contact Name</label>
+                        <input type="text" id="contactNameInput" placeholder="e.g., Jane Doe">
+                    </div>
+                    <!-- MODIFIED: Changed from Email to Phone -->
+                    <div class="settings-group">
+                        <label for="contactPhoneInput">Fallback Staff Contact Phone</label>
+                        <input type="tel" id="contactPhoneInput" placeholder="e.g., +919876543210">
+                    </div>
+                    <button id="saveSettingsBtn" class="action-btn save-btn" style="margin-top: 10px;">Save Settings</button>
+                </div>
+            </aside>
+
+            <!-- Editor Pane -->
+            <main id="editorPaneWrapper">
+                <div id="placeholder">
+                    <h2>Select a document to edit or manage your settings.</h2>
+                </div>
+                <div id="editorPane"></div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Custom Modal HTML -->
+    <div id="customModal" class="modal-overlay">
+        <div class="modal-content">
+            <p id="modalMessage" class="modal-message"></p>
+            <div id="modalButtons" class="modal-buttons"></div>
+        </div>
+    </div>
+
+    <script src="admin_portal.js"></script>
+</body>
+</html>
+

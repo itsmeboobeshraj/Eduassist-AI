@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Assistant</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --light-gray: #f3f4f6;
+            --medium-gray: #e5e7eb;
+            --dark-gray: #4b5563;
+            --bot-message-bg: #e0e7ff;
+            --user-message-bg: #ffffff;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-gray);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .chat-container {
+            width: 100%;
+            max-width: 450px;
+            height: 90vh;
+            max-height: 700px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .chat-header h2 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+        .chat-header p {
+            margin: 5px 0 0;
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        .message.bot {
+            background-color: var(--bot-message-bg);
+            color: #1e293b;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .message.user {
+            background-color: var(--primary-color);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .message.loading {
+            align-self: flex-start;
+        }
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+        }
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            margin: 0 2px;
+            background-color: #94a3b8;
+            border-radius: 50%;
+            display: inline-block;
+            animation: bounce 1s infinite;
+        }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-6px); }
+        }
+        .chat-input-form {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid var(--medium-gray);
+            flex-shrink: 0;
+        }
+        #userInput {
+            flex-grow: 1;
+            border: 1px solid var(--medium-gray);
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: 1em;
+            outline: none;
+        }
+        #userInput:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px #c7d2fe;
+        }
+        #sendBtn {
+            margin-left: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #sendBtn svg {
+            width: 20px;
+            height: 20px;
+        }
+        /* Dropdown for college selection */
+        .college-selector-chat {
+            padding: 15px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        #collegeSelectChat {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--medium-gray);
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>College Assistant</h2>
+            <p>Your AI-powered guide</p>
+        </div>
+        <div class="college-selector-chat">
+            <select id="collegeSelectChat">
+                <option value="">-- Select Your College --</option>
+            </select>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                Hello! Please select your college to begin. I'm here to help with your questions.
+            </div>
+        </div>
+        <form class="chat-input-form" id="chatForm">
+            <input type="text" id="userInput" placeholder="Ask a question..." autocomplete="off" disabled>
+            <button type="submit" id="sendBtn" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" /></svg>
+            </button>
+        </form>
+    </div>
+
+    <!-- We will create this JS file in the next step -->
+    <script src="chatbot.js"></script>
+</body>
+</html>
+
